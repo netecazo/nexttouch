@@ -15,7 +15,7 @@ export default async function DashboardPage() {
   }
 
   // Get all leads for the user
-  const allLeads = leadDb.findMany({ userId: session.user.id });
+  const allLeads = await leadDb.findMany({ userId: session.user.id });
   
   // Score and get top 10
   const todaysLeads = scoreAndRankLeads(allLeads, 10);

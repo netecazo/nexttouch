@@ -14,13 +14,13 @@ export default async function LeadDetailPage({ params }: { params: Promise<{ id:
   }
 
   const { id } = await params;
-  const lead = leadDb.findById(id);
+  const lead = await leadDb.findById(id);
   
   if (!lead || lead.userId !== session.user.id) {
     redirect("/leads");
   }
 
-  const activities = activityDb.findMany({ leadId: id });
+  const activities = await activityDb.findMany({ leadId: id });
 
   return (
     <div className="min-h-screen bg-gray-50">

@@ -6,7 +6,7 @@ async function seed() {
 
   // Create a demo user
   const hashedPassword = await bcrypt.hash('demo123', 10);
-  const user = userDb.create({
+  const user = await userDb.create({
     email: 'demo@nexttouch.app',
     password: hashedPassword,
     name: 'Demo Agent',
@@ -127,14 +127,14 @@ async function seed() {
   ];
 
   for (const leadData of sampleLeads) {
-    const lead = leadDb.create({
+    const lead = await leadDb.create({
       ...leadData,
       userId: user!.id,
     });
 
     // Add some activities
     if (leadData.lastContactDate) {
-      activityDb.create({
+      await activityDb.create({
         type: 'contact',
         message: 'Initial contact made',
         leadId: lead!.id,

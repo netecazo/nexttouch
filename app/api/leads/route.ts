@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Name is required' }, { status: 400 });
     }
 
-    const lead = leadDb.create({
+    const lead = await leadDb.create({
       name: data.name,
       phone: data.phone || null,
       email: data.email || null,

@@ -15,7 +15,7 @@ export default async function LeadsPage() {
     redirect("/login");
   }
 
-  const leads = leadDb.findMany({ userId: session.user.id });
+  const leads = await leadDb.findMany({ userId: session.user.id });
 
   return (
     <div className="min-h-screen bg-gray-50">

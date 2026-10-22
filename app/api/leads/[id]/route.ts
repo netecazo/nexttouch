@@ -11,7 +11,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     }
 
     const { id } = await params;
-    const lead = leadDb.findById(id);
+    const lead = await leadDb.findById(id);
     
     if (!lead || lead.userId !== session.user.id) {
       return NextResponse.json({ error: 'Lead not found' }, { status: 404 });
@@ -19,7 +19,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
 
     const data = await req.json();
 
-    const updatedLead = leadDb.update(id, {
+    const updatedLead = await leadDb.update(id, {
       name: data.name,
       phone: data.phone || null,
       email: data.email || null,
@@ -44,13 +44,13 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
     }
 
     const { id } = await params;
-    const lead = leadDb.findById(id);
+    const lead = await leadDb.findById(id);
     
     if (!lead || lead.userId !== session.user.id) {
       return NextResponse.json({ error: 'Lead not found' }, { status: 404 });
     }
 
-    leadDb.delete(id);
+    await leadDb.delete(id);
 
     return NextResponse.json({ success: true });
   } catch (error) {

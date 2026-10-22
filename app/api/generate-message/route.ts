@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Lead ID required' }, { status: 400 });
     }
 
-    const lead = leadDb.findById(leadId);
+    const lead = await leadDb.findById(leadId);
     
     if (!lead || lead.userId !== session.user.id) {
       return NextResponse.json({ error: 'Lead not found' }, { status: 404 });

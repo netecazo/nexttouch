@@ -4,8 +4,7 @@
 const useSupabase = !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
 
 if (!useSupabase) {
-  console.warn('⚠️  No Supabase credentials found. Using Supabase is required for production.');
-  throw new Error('Missing Supabase credentials. Please set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY');
+  console.warn('⚠️  No Supabase credentials found at build time. This is expected - credentials will be provided at runtime.');
 }
 
 // Always use Supabase in production

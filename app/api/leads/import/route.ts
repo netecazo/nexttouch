@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
       const lastContactDate = leadData.lastContactDate || leadData.LastContactDate || leadData.last_contact_date;
 
       try {
-        leadDb.create({
+        await leadDb.create({
           name,
           phone: phone || null,
           email: email || null,
