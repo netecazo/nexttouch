@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String?
+  name          String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  leads         Lead[]
+  activities    Activity[]
+}
+
+model Lead {
+  id              String    @id @default(cuid())
+  name            String
+  phone           String?
+  email           String?
+  source          String?
+  stage           String    @default("new")
+  notes           String?
+  lastContactDate DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  userId          String
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  activities      Activity[]
+}
+
+model Activity {
+  id          String   @id @default(cuid())
+  type        String
+  message     String?
+  createdAt   DateTime @default(now())
+  leadId      String
+  lead        Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
