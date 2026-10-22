@@ -1,3 +1,4 @@
+
 // Database abstraction layer - automatically uses Supabase if configured, otherwise SQLite
 // This file dynamically imports the correct database implementation
 
