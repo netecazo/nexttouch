@@ -1,21 +1,12 @@
-
-// Database abstraction layer - automatically uses Supabase if configured, otherwise SQLite
-// This file dynamically imports the correct database implementation
+// Database abstraction layer - uses Supabase for production
+// For production (Vercel), Supabase is required via environment variables
 
 const useSupabase = !!(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY);
 
-// Import the appropriate database module
-let dbModule: any;
-
-if (useSupabase) {
-  console.log('Using Supabase database');
-  dbModule = require('./db-supabase');
-} else {
-  console.log('Using SQLite database');
-  dbModule = require('./db-sqlite');
+if (!useSupabase) {
+  console.warn('⚠️  No Supabase credentials found. Using Supabase is required for production.');
+  throw new Error('Missing Supabase credentials. Please set NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY');
 }
 
-// Re-export everything from the selected database module
-export const userDb = dbModule.userDb;
-export const leadDb = dbModule.leadDb;
-export const activityDb = dbModule.activityDb;
+// Always use Supabase in production
+export * from './db-supabase';
