@@ -99,37 +99,57 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       async authorize(credentials) {
         try {
+          console.log('[Auth] Starting authorization...');
           const email = credentials?.email as string;
           const password = credentials?.password as string;
 
           if (!email || !password) {
+            console.log('[Auth] Missing email or password');
             return null;
           }
+
+          console.log('[Auth] Checking for demo user:', email === DEMO_EMAIL ? 'YES' : 'NO');
 
           // Auto-create demo user if logging in with demo credentials and user doesn't exist
           if (email === DEMO_EMAIL && password === DEMO_PASSWORD) {
-            await ensureDemoUser();
+            console.log('[Auth] Demo credentials detected, ensuring demo user exists...');
+            const demoUser = await ensureDemoUser();
+            if (demoUser) {
+              console.log('[Auth] Demo user ready');
+            } else {
+              console.log('[Auth] Failed to ensure demo user');
+            }
           }
 
+          console.log('[Auth] Looking up user by email...');
           const user = await userDb.findByEmail(email);
           
-          if (!user || !user.password) {
+          if (!user) {
+            console.log('[Auth] User not found');
             return null;
           }
 
+          if (!user.password) {
+            console.log('[Auth] User has no password');
+            return null;
+          }
+
+          console.log('[Auth] Comparing password...');
           const isValid = await bcrypt.compare(password, user.password);
 
           if (!isValid) {
+            console.log('[Auth] Password comparison failed');
             return null;
           }
 
+          console.log('[Auth] Authorization successful for:', user.email);
           return {
             id: user.id,
             email: user.email,
             name: user.name,
           };
         } catch (error) {
-          console.error('Authorization error:', error);
+          console.error('[Auth] Authorization error:', error);
           return null;
         }
       },
